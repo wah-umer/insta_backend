@@ -1,7 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/umerwaheed/insta_backend/database"
+)
 
 func main() {
-	fmt.Println("Hello world")
+	database.ConnectDatabase()
+
+	//check connection
+	var name string
+	err := database.DB.QueryRow(context.Background(), "SELECT current_database()").Scan(&name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Current database:", name)
+
+	defer database.DB.Close()
 }
